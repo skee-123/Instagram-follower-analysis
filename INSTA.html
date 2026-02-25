@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Follower Analysis Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .warning-box h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+        }
+
+        .tool-section {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .results {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .result-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+        }
+
+        .result-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-family: monospace;
+        }
+
+        .alternatives {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .alternative-card {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .alternative-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .alternative-card h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .alternative-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, #84fab0, #8fd3f4);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .help-text {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #2196f3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .alternatives {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Instagram Follower Analysis</h1>
+            <p>Analyze your Instagram followers and following lists manually</p>
+        </div>
+
+        <div class="warning-box">
+            <h3>⚠️ Important Notice</h3>
+            <p><strong>This tool does NOT access Instagram's API or violate their Terms of Service.</strong> It only helps you analyze data you manually provide. Automated Instagram scraping tools can result in account restrictions or bans.</p>
+        </div>
+
+        <div class="tool-section">
+            <h2>Manual Follower Comparison Tool</h2>
+            <p>To use this tool, you'll need to manually copy your followers and following lists from Instagram:</p>
+            
+            <div class="help-text">
+                <strong>How to get your data:</strong><br>
+                1. Go to your Instagram profile<br>
+                2. Click "Following" → manually copy usernames<br>
+                3. Click "Followers" → manually copy usernames<br>
+                4. Paste the lists below (one username per line)
+            </div>
+
+            <div class="input-group">
+                <label for="following">People You Follow (one username per line):</label>
+                <textarea id="following" placeholder="username1&#10;username2&#10;username3&#10;..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label for="followers">Your Followers (one username per line):</label>
+                <textarea id="followers" placeholder="follower1&#10;follower2&#10;follower3&#10;..."></textarea>
+            </div>
+
+            <button class="btn" onclick="analyzeFollowers()">Analyze Followers</button>
+            <button class="btn" onclick="clearAll()">Clear All</button>
+
+            <div id="results" class="results" style="display: none;">
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="followingCount">0</div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="followersCount">0</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="notFollowingBackCount">0</div>
+                        <div class="stat-label">Not Following Back</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="mutualCount">0</div>
+                        <div class="stat-label">Mutual Follows</div>
+                    </div>
+                </div>
+
+                <h3>🔍 People you follow who don't follow you back:</h3>
+                <div id="notFollowingBack" class="result-list"></div>
+
+                <h3>🤝 Mutual followers:</h3>
+                <div id="mutualFollowers" class="result-list"></div>
+
+                <h3>👥 People who follow you but you don't follow back:</h3>
+                <div id="followersNotFollowed" class="result-list"></div>
+            </div>
+        </div>
+
+        <div class="alternatives">
+            <div class="alternative-card">
+                <h4>📱 Official Instagram Features</h4>
+                <p>Use Instagram's built-in following/followers lists. Visit profiles manually to check if they follow you back.</p>
+            </div>
+            
+            <div class="alternative-card">
+                <h4>📊 Business Account Analytics</h4>
+                <p>Switch to a business account for basic analytics. Instagram provides some insights for business profiles.</p>
+            </div>
+            
+            <div class="alternative-card">
+                <h4>📋 Data Export</h4>
+                <p>Request your Instagram data through Settings → Privacy and Security → Download Data. This gives you official lists.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeFollowers() {
+            const followingText = document.getElementById('following').value.trim();
+            const followersText = document.getElementById('followers').value.trim();
+            
+            if (!followingText || !followersText) {
+                alert('Please enter both following and followers lists!');
+                return;
+            }
+            
+            // Parse lists (remove @ symbols and clean usernames)
+            const following = followingText.split('\n')
+                .map(username => username.trim().replace('@', '').toLowerCase())
+                .filter(username => username.length > 0);
+                
+            const followers = followersText.split('\n')
+                .map(username => username.trim().replace('@', '').toLowerCase())
+                .filter(username => username.length > 0);
+            
+            // Convert to sets for faster lookup
+            const followingSet = new Set(following);
+            const followersSet = new Set(followers);
+            
+            // Find people you follow who don't follow back
+            const notFollowingBack = following.filter(username => !followersSet.has(username));
+            
+            // Find mutual followers
+            const mutualFollowers = following.filter(username => followersSet.has(username));
+            
+            // Find followers you don't follow back
+            const followersNotFollowed = followers.filter(username => !followingSet.has(username));
+            
+            // Update statistics
+            document.getElementById('followingCount').textContent = following.length;
+            document.getElementById('followersCount').textContent = followers.length;
+            document.getElementById('notFollowingBackCount').textContent = notFollowingBack.length;
+            document.getElementById('mutualCount').textContent = mutualFollowers.length;
+            
+            // Display results
+            displayResults('notFollowingBack', notFollowingBack);
+            displayResults('mutualFollowers', mutualFollowers);
+            displayResults('followersNotFollowed', followersNotFollowed);
+            
+            // Show results section
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function displayResults(elementId, usernames) {
+            const element = document.getElementById(elementId);
+            
+            if (usernames.length === 0) {
+                element.innerHTML = '<div class="result-item">No users found in this category.</div>';
+                return;
+            }
+            
+            element.innerHTML = usernames
+                .map(username => `<div class="result-item">@${username}</div>`)
+                .join('');
+        }
+        
+        function clearAll() {
+            document.getElementById('following').value = '';
+            document.getElementById('followers').value = '';
+            document.getElementById('results').style.display = 'none';
+        }
+        
+        // Auto-resize textareas
+        document.addEventListener('DOMContentLoaded', function() {
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.max(120, this.scrollHeight) + 'px';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
